@@ -116,7 +116,6 @@ def gestion_un_producto(id):
             }
         else:
             data=request.get_json()
-            print(data)
             conexion = mysql.connection.cursor()
             conexion.execute("UPDATE productos SET nombre= %s, precio= %s, fecha_vencimiento= %s, categoria_id=%s, disponible=%s, imagen=%s WHERE id=%s", [
                 data.get('nombre'),
@@ -133,7 +132,23 @@ def gestion_un_producto(id):
             return {
                 'message': 'Producto actualizado exitosamente'
             }
+    elif request.method =='DELETE':
+        resultado = validar_producto(id)
+        if resultado is None:
+            return {
+                'message': 'Producto no existe'
+            }
 
+        else:
+            conexion = mysql.connection.cursor()
+            # primero eliminar ese producto en los almacenes
+            conexion.execute("DELETE FROM productos WHERE id = %s", [id])
+            mysql.connection.commit()
+            conexion.close()
+
+            return {
+                'message': 'Producto eliminado exitosamente'
+            }
 
 # load_dotenv > cargamos todas las variables definidas en el archivo .env como si fueran variables de entorno
 app.run(debug=True, load_dotenv=True)
