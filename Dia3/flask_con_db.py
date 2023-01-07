@@ -73,32 +73,66 @@ def gestion_productos():
         }
 
 
+def validar_producto(id):
+    # creamos la conexion
+    conexion = mysql.connection.cursor()
+    # ejecutamos el select con la clausula del id
+    conexion.execute("SELECT * FROM productos WHERE id=%d" % (id))
+    # conexion.execute("SELECT * FROM productos WHERE id="+str(id))
+    # conexion.execute("SELECT * FROM productos WHERE id={}".format(id))
+    # conexion.execute(f"SELECT * FROM productos WHERE id={id}")
+    resultado = conexion.fetchone()
+    conexion.close()
+    print(resultado)
+    return resultado
+
 @app.route("/producto/<int:id>", methods = ['GET', 'PUT', 'DELETE'])
 def gestion_un_producto(id):
     if request.method == 'GET':
-        # creamos la conexion
-        conexion = mysql.connection.cursor()
-        # ejecutamos el select con la clausula del id
-        conexion.execute("SELECT * FROM productos WHERE id=%d" % (id))
-        # conexion.execute("SELECT * FROM productos WHERE id="+id)
-        # conexion.execute("SELECT * FROM productos WHERE id={}".format(id))
-        # conexion.execute(f"SELECT * FROM productos WHERE id={id}")
-        resultado = conexion.fetchone()
-        producto = {
-                'id': resultado[0],
-                'nombre':resultado[1],
-                'imagen':resultado[2],
-                'fecha_vencimiento':resultado[3].strftime('%Y-%m-%d'),
-                'precio': resultado[4],
-                'disponible': resultado[5],
-                'categoria_id': resultado[6]
+        resultado = validar_producto(id)
+        if resultado is None:
+            return {
+                'message': 'Producto no encontrado'
             }
-        conexion.close()
-        print(resultado)
-        return {
-            'content': producto
-        }
-    pass
+        else:
+            producto = {
+                    'id': resultado[0],
+                    'nombre':resultado[1],
+                    'imagen':resultado[2],
+                    'fecha_vencimiento':resultado[3].strftime('%Y-%m-%d'),
+                    'precio': resultado[4],
+                    'disponible': resultado[5],
+                    'categoria_id': resultado[6]
+                }
+            
+            return {
+                'content': producto
+            }
+    elif request.method == 'PUT':
+        resultado = validar_producto(id)
+        if resultado is None:
+            return {
+                'message': 'Producto no existe'
+            }
+        else:
+            data=request.get_json()
+            print(data)
+            conexion = mysql.connection.cursor()
+            conexion.execute("UPDATE productos SET nombre= %s, precio= %s, fecha_vencimiento= %s, categoria_id=%s, disponible=%s, imagen=%s WHERE id=%s", [
+                data.get('nombre'),
+                data.get('precio'),
+                data.get('fecha_vencimiento'),
+                data.get('categoria_id'),
+                data.get('disponible'),
+                data.get('imagen'),
+                resultado[0] # id del producto
+            ])
+            mysql.connection.commit()
+            conexion.close()
+
+            return {
+                'message': 'Producto actualizado exitosamente'
+            }
 
 
 # load_dotenv > cargamos todas las variables definidas en el archivo .env como si fueran variables de entorno
