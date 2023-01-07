@@ -75,6 +75,29 @@ def gestion_productos():
 
 @app.route("/producto/<int:id>", methods = ['GET', 'PUT', 'DELETE'])
 def gestion_un_producto(id):
+    if request.method == 'GET':
+        # creamos la conexion
+        conexion = mysql.connection.cursor()
+        # ejecutamos el select con la clausula del id
+        conexion.execute("SELECT * FROM productos WHERE id=%d" % (id))
+        # conexion.execute("SELECT * FROM productos WHERE id="+id)
+        # conexion.execute("SELECT * FROM productos WHERE id={}".format(id))
+        # conexion.execute(f"SELECT * FROM productos WHERE id={id}")
+        resultado = conexion.fetchone()
+        producto = {
+                'id': resultado[0],
+                'nombre':resultado[1],
+                'imagen':resultado[2],
+                'fecha_vencimiento':resultado[3].strftime('%Y-%m-%d'),
+                'precio': resultado[4],
+                'disponible': resultado[5],
+                'categoria_id': resultado[6]
+            }
+        conexion.close()
+        print(resultado)
+        return {
+            'content': producto
+        }
     pass
 
 
