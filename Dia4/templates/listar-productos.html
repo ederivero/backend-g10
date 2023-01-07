@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Hola estos son tus productos:</p>
+    <p>{{ nombre }}</p>
+    <ul>
+      {% for producto in lista_productos %}
+      <li>
+        <ul>
+          <li>ID: {{ producto.id }}</li>
+          <li>Nombre: {{ producto.nombre }}</li>
+          <li>Precio: {{ producto.precio }}</li>
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
