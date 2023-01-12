@@ -1,0 +1,3 @@
+flask db init > inicializa mi proyecto de flask con migraciones
+flask db migrate -m "...." > crea la migracion con el mensaje que se le indica
+flask db upgrade > ejecuta todas las migraciones FALTANTES en la base de datos
