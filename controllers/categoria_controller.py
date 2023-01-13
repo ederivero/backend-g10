@@ -70,8 +70,12 @@ class CategoriaController(Resource):
         # all > me devolver una lista con todas las coincidencias 
         categoria = conexion.session.query(Categoria).filter_by(id= id).first()
         print(categoria)
-
-        # TODO: convertir esta categoria para mostrar en el content, Si es que la categoria no existe (None) indicar que la categoria no existe en el 'message'
+        if categoria is None:
+            return {
+                'message': 'La categoria no existe'
+            }
+        serializador = CategoriaDto()
+        data = serializador.dump(categoria)
         return {
-            'content': ''
+            'content': data
         }
