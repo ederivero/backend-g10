@@ -1,3 +1,4 @@
 entorno_prueba
 .env
-__pycache__
+__pycache__/
+venv/
