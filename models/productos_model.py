@@ -7,3 +7,7 @@ class ProductosModel(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(45))
     precio = Column(Float)
+
+    def __init__(self, nombre, precio):
+        self.nombre = nombre
+        self.precio = precio
