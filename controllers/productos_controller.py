@@ -1,8 +1,9 @@
-from ..models.productos_model import ProductosModel
+from models.productos_model import ProductosModel
 
 class ProductosController:
 
     def listarProductos(self):
-        productos = ProductosModel.query.all()
-        print(productos)
+        productos = ProductosModel()
+        # productos = ProductosModel.query.all()
+        # print(productos)
         return []
