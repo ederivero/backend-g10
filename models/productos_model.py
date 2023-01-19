@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from app import db
+from db import db
 
 class ProductosModel(db.Model):
     __tablename__ = 'productos'
