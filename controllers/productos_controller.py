@@ -3,13 +3,19 @@ from db import db
 
 class ProductosController:
 
-    def create(self):
-        producto = ProductosModel('Zapatillas Nike', 200.50)
-        db.session.add(producto)
-        db.session.commit()
-        return {
-            'data': 'Texto cualquiera'
-        }
+    def create(self, data):
+        try:
+            producto = ProductosModel(data['nombre'], data['precio'])
+            db.session.add(producto)
+            db.session.commit()
+            return {
+                'data': producto.json()
+            }
+        except Exception as e:
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }
 
     def listarProductos(self):
         productos = ProductosModel.query.all()

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from controllers.productos_controller import ProductosController
 from flask_migrate import Migrate
 from db import db
@@ -20,10 +20,10 @@ def productosListar():
     controller = ProductosController()
     return controller.listarProductos()
 
-@app.route("/productos/crear", methods=['GET'])
+@app.route("/productos/crear", methods=['POST'])
 def productosCrear():
     controller = ProductosController()
-    return controller.create()
+    return controller.create(request.json)
 
 if __name__ == '__main__':
     app.run(debug=True)
