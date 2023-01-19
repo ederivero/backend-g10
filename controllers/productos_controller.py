@@ -1,20 +1,8 @@
-from app import db
-from sqlalchemy import Column
-
+from ..models.productos_model import ProductosModel
 
 class ProductosController:
 
     def listarProductos(self):
-        productos = [
-            {
-                'nombre': 'Zapatillas Nike',
-                'precio': 200.00,
-                'talla': 42
-            },
-            {
-                'nombre': 'Zapatillas Pumba',
-                'precio': 150.00,
-                'talla': 41
-            }
-        ]
-        return productos
+        productos = ProductosModel.query.all()
+        print(productos)
+        return []
