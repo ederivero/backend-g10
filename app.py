@@ -1,7 +1,11 @@
 from flask import Flask
-from controllers.productos import ProductosController
+from flask_sqlalchemy import SQLAlchemy
+from controllers.productos_controller import ProductosController
 
 app = Flask(__name__)
+db = SQLAlchemy(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///project.db"
 
 @app.route("/")
 def index():

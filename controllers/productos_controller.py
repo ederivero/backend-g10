@@ -1,4 +1,9 @@
+from app import db
+from sqlalchemy import Column
+
+
 class ProductosController:
+
     def listarProductos(self):
         productos = [
             {
