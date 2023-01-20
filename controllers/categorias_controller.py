@@ -23,6 +23,7 @@ class CategoriasController:
     def listarCategorias(self):
         try:
             categorias = self.model.query.all()
+            # categorias = self.model.query.filter_by(estado=True).all()
             response = []
             for categoria in categorias:
                 response.append(categoria.convertirJson())
@@ -35,10 +36,31 @@ class CategoriasController:
                 'error': str(e)
             }, 500
 
+    def actualizarCategoria(self, categoria_id, data):
+        try:
+            categoria = self.model.query.get(categoria_id)
+            categoria.nombre = data['nombre']
+            db.session.commit()
+            return {
+                'data': categoria.convertirJson()
+            }
+        except Exception as e:
+            db.session.rollback()
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }, 500
+
     def eliminarCategoria(self, categoria_id):
         try:
-            pass
+            categoria = self.model.query.get(categoria_id)
+            categoria.estado = False
+            db.session.commit()
+            return {
+                'data': categoria.convertirJson()
+            }
         except Exception as e:
+            db.session.rollback()
             return {
                 'message': 'Internal server error',
                 'error': str(e)
