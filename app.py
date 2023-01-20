@@ -23,7 +23,12 @@ def productosListar():
 @app.route("/productos/crear", methods=['POST'])
 def productosCrear():
     controller = ProductosController()
-    return controller.create(request.json)
+    return controller.crearProducto(request.json)
+
+@app.route("/productos/eliminar/<str:producto_id>")
+def productosEliminar(producto_id):
+    controller = ProductosController()
+    return controller.eliminarProducto(producto_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
