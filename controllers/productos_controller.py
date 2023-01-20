@@ -1,4 +1,5 @@
 from models.productos_model import ProductosModel
+from models.categorias_productos import CategoriasProductosModel
 from db import db
 
 class ProductosController:
@@ -8,8 +9,15 @@ class ProductosController:
             producto = ProductosModel(data['nombre'], data['precio'])
             db.session.add(producto)
             db.session.commit()
+
+            nuevas_categorias = []
+            for categoria in data['categorias']:
+                nueva_categoria = CategoriasProductosModel(producto.id, categoria['categoria_id'])
+                nuevas_categorias.append(nueva_categoria)
+            db.session.add_all(nuevas_categorias)
+            db.session.commit()
             return {
-                'data': producto.convertirJson()
+                'data': 'No hay ningun error'
             }, 201
         except Exception as e:
             db.session.rollback()
