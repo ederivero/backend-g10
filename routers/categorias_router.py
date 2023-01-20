@@ -8,6 +8,11 @@ def categoriasCrear():
     controller = CategoriasController()
     return controller.crearCategoria(request.json)
 
+@app.route("/categorias/eliminar/<int:categoria_id>")
+def categoriasEliminar():
+    controller = CategoriasController()
+    return controller.eliminarCategoria()
+
 
 @app.route("/categorias/listar", methods=['GET'])
 def categoriasListar():

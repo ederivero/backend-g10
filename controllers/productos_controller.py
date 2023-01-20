@@ -30,7 +30,7 @@ class ProductosController:
     def eliminarProducto(self, producto_id):
         try:
             producto = ProductosModel.query.filter_by(id=producto_id).first()
-            db.session.delete(producto)
+            producto.estado = False
             db.session.commit()
             return {
                 'message': 'Producto eliminado correctamente'

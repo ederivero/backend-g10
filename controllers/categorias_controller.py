@@ -34,3 +34,12 @@ class CategoriasController:
                 'message': 'Internal server error',
                 'error': str(e)
             }, 500
+
+    def eliminarCategoria(self, categoria_id):
+        try:
+            pass
+        except Exception as e:
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }, 500
