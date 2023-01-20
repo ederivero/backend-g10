@@ -12,7 +12,7 @@ class ProductosModel(db.Model):
         self.nombre = nombre
         self.precio = precio
 
-    def json(self):
+    def convertirJson(self):
         return {
             'id': self.id,
             'nombre': self.nombre,
