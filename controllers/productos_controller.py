@@ -1,5 +1,5 @@
 from models.productos_model import ProductosModel
-from models.categorias_productos import CategoriasProductosModel
+from models.categorias_productos_model import CategoriasProductosModel
 from db import db
 
 class ProductosController:
@@ -17,7 +17,7 @@ class ProductosController:
             db.session.add_all(nuevas_categorias)
             db.session.commit()
             return {
-                'data': 'No hay ningun error'
+                'data': producto
             }, 201
         except Exception as e:
             db.session.rollback()

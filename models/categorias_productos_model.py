@@ -10,8 +10,7 @@ class CategoriasProductosModel(db.Model):
     categoria_id = Column(Integer, ForeignKey('categorias.id'))
     producto_id = Column(Integer, ForeignKey('productos.id'))
 
-    categorias = relationship('CategoriasModel')
-    productos = relationship('ProductosModel')
+    categoria = relationship('CategoriasModel')
 
     def __init__(self, producto_id, categoria_id) -> None:
         self.producto_id = producto_id
