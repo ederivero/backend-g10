@@ -6,7 +6,7 @@ class ProductosController:
 
     def crearProducto(self, data):
         try:
-            producto = ProductosModel(data['nombre'], data['precio'])
+            producto = ProductosModel(data['nombre'], data['precio'], data['imagen'])
             db.session.add(producto)
             db.session.commit()
 
@@ -17,7 +17,7 @@ class ProductosController:
             db.session.add_all(nuevas_categorias)
             db.session.commit()
             return {
-                'data': producto
+                'data': producto.convertirJson()
             }, 201
         except Exception as e:
             db.session.rollback()
