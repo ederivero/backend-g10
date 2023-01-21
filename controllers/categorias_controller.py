@@ -22,8 +22,8 @@ class CategoriasController:
 
     def listarCategorias(self):
         try:
-            categorias = self.model.query.all()
-            # categorias = self.model.query.filter_by(estado=True).all()
+            # categorias = self.model.query.all()
+            categorias = self.model.query.filter_by(estado=True).all()
             response = []
             for categoria in categorias:
                 response.append(categoria.convertirJson())
