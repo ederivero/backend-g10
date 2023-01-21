@@ -17,11 +17,14 @@ class ProductosModel(db.Model):
         self.precio = precio
 
     def convertirJson(self):
+        categorias = []
         for categoria_producto in self.categorias_productos:
-            print(categoria_producto.categoria.convertirJson())
+            categorias.append(categoria_producto.categoria.convertirJson())
+
         return {
             'id': self.id,
             'nombre': self.nombre,
             'precio': self.precio,
             'estado': self.estado,
+            'categorias': categorias
         }
