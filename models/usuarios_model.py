@@ -17,6 +17,9 @@ class UsuariosModel(db.Model):
         self.imagen = imagen
         self.contrasena = contrasena
 
+    def __str__(self) -> str:
+        return self.nombres
+
     def convertirJson(self):
         return {
             'id': self.id,

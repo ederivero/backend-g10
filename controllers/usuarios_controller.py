@@ -1,5 +1,6 @@
 from models.usuarios_model import UsuariosModel
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token
 from db import db
 
 
@@ -16,6 +17,28 @@ class UsuariosController:
             return {
                 'data': usuario.convertirJson()
             }
+        except Exception as e:
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }, 500
+
+    def iniciarSesion(self, data):
+        try:
+            usuario = self.model.query.filter_by(correo=data['correo']).first()
+            if not usuario:
+                return {
+                    'message': 'Unauthorized'
+                }, 401
+            
+            if not check_password_hash(usuario.contrasena, data['contrasena']):
+                return {
+                    'message': 'Unathorized'
+                }, 401
+            access_token = create_access_token(identity=usuario.id)
+            return {
+                'access_token': access_token
+            }, 200
         except Exception as e:
             return {
                 'message': 'Internal server error',

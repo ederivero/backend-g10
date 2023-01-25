@@ -7,3 +7,8 @@ from flask import request
 def usuariosRegistrar():
     controllador = UsuariosController()
     return controllador.crearUsuario(request.json)
+
+@app.route("/auth/autenticar", methods=['POST'])
+def usuariosAutenticar():
+    controller = UsuariosController()
+    return controller.iniciarSesion(request.json)
