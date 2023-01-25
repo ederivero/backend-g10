@@ -1,6 +1,6 @@
 from models.usuarios_model import UsuariosModel
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from db import db
 
 
@@ -39,6 +39,27 @@ class UsuariosController:
                 'id': usuario.id,
                 'correo': usuario.correo
             })
+            refresh_token = create_refresh_token(identity={
+                'id': usuario.id,
+                'correo': usuario.correo
+            })
+            return {
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }, 200
+        except Exception as e:
+            return {
+                'message': 'Internal server error',
+                'error': str(e)
+            }, 500
+
+    def refreshSesion(self, identity):
+        try:
+            if not identity:
+                return {
+                    'message': 'Unauthorized'
+                }, 401
+            access_token = create_access_token(identity=identity)
             return {
                 'access_token': access_token
             }, 200

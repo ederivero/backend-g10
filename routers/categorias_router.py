@@ -25,3 +25,8 @@ def categoriasListar():
     user_id = get_jwt_identity()
     controller = CategoriasController()
     return controller.listarCategorias(user_id)
+
+@app.route("/categorias/importar", methods=['GET'])
+def categoriasImportar():
+    controller = CategoriasController()
+    return controller.importarExcel()
