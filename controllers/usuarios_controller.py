@@ -35,7 +35,10 @@ class UsuariosController:
                 return {
                     'message': 'Unathorized'
                 }, 401
-            access_token = create_access_token(identity=usuario.id)
+            access_token = create_access_token(identity={
+                'id': usuario.id,
+                'correo': usuario.correo
+            })
             return {
                 'access_token': access_token
             }, 200

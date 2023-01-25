@@ -20,7 +20,7 @@ class CategoriasController:
                 'error': str(e)
             }, 500
 
-    def listarCategorias(self):
+    def listarCategorias(self, id):
         try:
             # categorias = self.model.query.all()
             categorias = self.model.query.filter_by(estado=True).all()
