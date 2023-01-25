@@ -22,11 +22,17 @@ class CategoriasController:
 
     def listarCategorias(self, id):
         try:
+            print(id)
             # categorias = self.model.query.all()
             categorias = self.model.query.filter_by(estado=True).all()
-            response = []
-            for categoria in categorias:
-                response.append(categoria.convertirJson())
+            # response = []
+            # for categoria in categorias:
+            #     response.append(categoria.convertirJson())
+
+            response = [
+                categoria.convertirJson()
+                for categoria in categorias
+            ]
             return {
                 'data': response
             }, 200
