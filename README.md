@@ -65,3 +65,18 @@ INSTALLED_APPS = [
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+## Instalar Django Rest Framework
+
+```
+pip install djangorestframework
+```
+
+## Agregar DRF a INSTALLLED_APPS
+
+```python
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+]
+```
