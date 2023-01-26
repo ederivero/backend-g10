@@ -43,3 +43,25 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
+
+## Crear una app
+
+```
+python manage.py startapp almacen
+```
+
+## Registramos nuestra app en INSTALLED_APPS
+
+```python
+INSTALLED_APPS = [
+    ...,
+    'almacen'
+]
+```
+
+## Crear nuestro nuevo model y migrar
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
