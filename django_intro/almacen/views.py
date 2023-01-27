@@ -39,7 +39,7 @@ class CategoriasView(generics.GenericAPIView):
             categoria = self.get_serializer(data=request.data)
             if categoria.is_valid():
                 categoria.save()
-                return Response(categoria.data)
+                return Response(categoria.data, status=status.HTTP_201_CREATED)
 
             error = 'Faltan campos'
             for campo in categoria.errors:
@@ -57,9 +57,32 @@ class ActualizarCategoriasView(generics.GenericAPIView):
     queryset = CategoriasModel.objects.all()
     serializer_class = CategoriasSerializer
 
-    def update(self, request, id):
+    def get(self, request, categoria_id):
         try:
-            pass
+            record = self.get_queryset().get(id=categoria_id)
+            serializer = self.get_serializer(record)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self, request, categoria_id):
+        try:
+            categoria = self.get_queryset().get(id=categoria_id)
+            serializer = self.get_serializer(categoria, data=request.data)
+            if serializer.is_valid():
+                categoria_actualizada = serializer.update(categoria, serializer.validated_data)
+                nuevo_serializador = self.get_serializer(categoria_actualizada)
+                return Response(nuevo_serializador.data, status=status.HTTP_201_CREATED)
+                
+            error = 'Faltan campos'
+            for campo in categoria.errors:
+                error = error + ' ' + campo + ', '
+            return Response({
+                'message': error
+            })
         except Exception as e:
             return Response({
                 'message': 'Internal server error',
