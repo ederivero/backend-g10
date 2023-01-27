@@ -14,3 +14,8 @@ class CategoriasSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriasModel
         fields = '__all__'
+    
+    def delete(self):
+        self.instance.estado = False
+        self.instance.save()
+        return self.instance

@@ -76,13 +76,28 @@ class ActualizarCategoriasView(generics.GenericAPIView):
                 categoria_actualizada = serializer.update(categoria, serializer.validated_data)
                 nuevo_serializador = self.get_serializer(categoria_actualizada)
                 return Response(nuevo_serializador.data, status=status.HTTP_201_CREATED)
-                
+
             error = 'Faltan campos'
             for campo in categoria.errors:
                 error = error + ' ' + campo + ', '
             return Response({
                 'message': error
             })
+        except Exception as e:
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
+    def delete(self, request, categoria_id):
+        try:
+            categoria = self.get_queryset().get(id=categoria_id)
+            serializador = self.get_serializer(categoria)
+            serializador.delete()
+            return Response({
+                'message': 'Categoria eliminada correctamente'
+            }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({
                 'message': 'Internal server error',
