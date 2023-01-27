@@ -10,6 +10,7 @@ python -m venv venv
 venv\Scripts\activate
 source venv/Scripts/activate
 source venv/bin/activate
+deactivate
 ```
 
 ## Instalar Django
@@ -50,7 +51,7 @@ python manage.py createsuperuser
 python manage.py startapp almacen
 ```
 
-## Registramos nuestra app en INSTALLED_APPS
+## Registramos nuestra app en INSTALLED_APPS `settings.py`
 
 ```python
 INSTALLED_APPS = [

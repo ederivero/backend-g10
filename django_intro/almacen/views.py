@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import ProductosModel
-from .serializers import ProductosSerializer
+from .models import ProductosModel, CategoriasModel
+from .serializers import ProductosSerializer, CategoriasSerializer
 from rest_framework import generics
+from rest_framework.response import Response
 
 def renderHtml(request):
     return HttpResponse("<button>Dame click</button>")
@@ -14,3 +15,30 @@ def buscarProducto(request, producto_id):
 class ProductosView(generics.ListCreateAPIView):
     queryset = ProductosModel.objects.all()
     serializer_class = ProductosSerializer
+
+class CategoriasView(generics.GenericAPIView):
+    serializer_class = CategoriasSerializer
+    queryset = CategoriasModel.objects.all()
+
+    def get(self, request):
+        try:
+            record = self.get_queryset()
+            serializer = self.get_serializer(record, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            })
+
+    def post(self, request):
+        try:
+            record = self.get_serializer(data=request.data)
+            print(record)
+            return Response({
+                'message': 'Transaccion exitosa'
+            })
+        except:
+            return Response({
+                'message': 'Internal server error'
+            })
