@@ -18,7 +18,6 @@ class CategoriasModel(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45, null=False)
     estado = models.BooleanField(default=True, null=True)
-    producto = models.ManyToManyField(ProductosModel)
 
     class Meta:
         db_table = 'categorias'
@@ -26,12 +25,12 @@ class CategoriasModel(models.Model):
     def __str__(self) -> str:
         return self.nombre
 
-# class ProductosCategoriasModel(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     producto_id = models.ForeignKey(ProductosModel, on_delete=models.CASCADE)
-#     categoria_id = models.ForeignKey(CategoriasModel, on_delete=models.CASCADE)
+class ProductosCategoriasModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    producto_id = models.ForeignKey(ProductosModel, on_delete=models.CASCADE)
+    categoria_id = models.ForeignKey(CategoriasModel, on_delete=models.CASCADE)
 
-#     class Meta:
-#         db_table = 'productos_categorias'
+    class Meta:
+        db_table = 'productos_categorias'
 
 

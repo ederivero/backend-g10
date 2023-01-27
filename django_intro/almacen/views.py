@@ -33,10 +33,13 @@ class CategoriasView(generics.GenericAPIView):
 
     def post(self, request):
         try:
-            record = self.get_serializer(data=request.data)
-            print(record)
+            categoria = self.get_serializer(data=request.data)
+            if categoria.is_valid():
+                categoria.save()
+                print(categoria.data)
+                return Response(categoria.data)
             return Response({
-                'message': 'Transaccion exitosa'
+                
             })
         except:
             return Response({
