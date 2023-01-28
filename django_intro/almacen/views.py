@@ -12,7 +12,7 @@ from .serializers import (
     ProductosSerializer, CategoriasSerializer,
     ClientesSerializer, OrdenesSerializer,
 )
-from pprint import pprint
+from django.db import transaction
 
 def renderHtml(request):
     return HttpResponse("<button>Dame click</button>")
@@ -118,6 +118,7 @@ class OrdenesView(generics.GenericAPIView):
     queryset = OrdenesModel.objects.all()
     serializer_class = OrdenesSerializer
 
+    @transaction.atomic
     def post(self, request):
         try:
             orden = self.get_serializer(data=request.data)
