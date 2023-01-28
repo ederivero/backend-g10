@@ -37,6 +37,16 @@ class DetallesOrdenSerializer(serializers.ModelSerializer):
 class OrdenesSerializer(serializers.ModelSerializer):
     cliente = ClientesSerializer(source='id')
     detalle =  DetallesOrdenSerializer(many=True, write_only=True)
+
     class Meta:
         model = OrdenesModel
         exclude = ['estado', 'cliente_id']
+
+# Pendiente
+class GetOrdenesSerializer(serializers.ModelSerializer):
+    # cliente = ClientesSerializer(source='id')
+    # detalle
+    # usuario (vendedor)
+    class Meta:
+        model = OrdenesModel
+        fields = '__all__'
