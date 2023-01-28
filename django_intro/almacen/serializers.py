@@ -26,6 +26,8 @@ class ClientesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrdenesSerializer(serializers.ModelSerializer):
+    cliente = ClientesSerializer()
+    # detaller = 
     class Meta:
         model = OrdenesModel
         fields = '__all__'
