@@ -1,9 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import ProductosModel, CategoriasModel
-from .serializers import ProductosSerializer, CategoriasSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
+from .models import (
+    ProductosModel, CategoriasModel,
+    ClientesModel, OrdenesModel,
+)
+from .serializers import (
+    ProductosSerializer, CategoriasSerializer,
+    ClientesSerializer, OrdenesSerializer,
+)
 
 def renderHtml(request):
     return HttpResponse("<button>Dame click</button>")
@@ -98,6 +104,23 @@ class ActualizarCategoriasView(generics.GenericAPIView):
             return Response({
                 'message': 'Categoria eliminada correctamente'
             }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class OrdenesView(generics.GenericAPIView):
+    queryset = OrdenesModel.objects.all()
+    serializer_class = OrdenesSerializer
+
+    def post(self, request):
+        try:
+            print(request.data)
+            return Response({
+                'message': 'Operacion exitosa'
+            }, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({
                 'message': 'Internal server error',

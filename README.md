@@ -81,3 +81,11 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 ```
+
+## Documentar nuestra API con Swagger y Redoc
+
+```
+pip install drf-yasg
+```
+
+## Configurar `drf-yasg`
