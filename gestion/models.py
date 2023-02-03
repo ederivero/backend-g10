@@ -37,3 +37,5 @@ class PlatoModel(models.Model):
 
     categoria = models.ForeignKey(to=CategoriaModel, on_delete=models.PROTECT, db_column='categoria_id')
     
+    class Meta:
+        db_table = 'platos'

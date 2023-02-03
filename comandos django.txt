@@ -1,0 +1,6 @@
+django-admin startproject NOMBRE    > inicializa un nuevo proyecto de django
+python manage.py startapp NOMBRE    > crea una nueva aplicacion dentro del proyecto
+python manage.py showmigrations     > muestra todas las migraciones y las que se han efectuado en la bd se colocara una X
+python manage.py makemigrations NOMBRE_APP --name NOMBRE_MIGRACION > creara una nueva migracion de esa determinada aplicacion con ese nombre
+python manage.py migrate            > ejecuta todas las migraciones pendientes en nuestra base de datos
+python manage.py sqlmigrate NOMBRE_APP NUM_MIGRACION    > devolvera el codigo en lenguaje SQL de la migracion
