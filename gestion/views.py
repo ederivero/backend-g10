@@ -57,7 +57,18 @@ class PlatoApiView(ListCreateAPIView):
                 'content': serializador.errors
 
             })
-
+        
+        # asi guardamos la informacion en la base de datos utilizando el serializador
+        nuevoPlato = serializador.save()
+        print(nuevoPlato)
+        
+        serializar = PlatoSerializer(instance=nuevoPlato)
         return Response(data={
-            'message': 'Plato creado exitosamente'
+            'message': 'Plato creado exitosamente',
+            # data > es la informacion convertida a un diccionario para que pueda ser entendida por el cliente
+            'content': serializar.data
         })
+
+
+
+
