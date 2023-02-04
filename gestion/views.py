@@ -1,6 +1,6 @@
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView
 from .models import CategoriaModel, PlatoModel
-from .serializers import CategoriaSerializer, PlatoSerializer
+from .serializers import CategoriaSerializer, PlatoSerializer, CategoriaConPlatosSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
 
@@ -50,6 +50,14 @@ class PlatoApiView(ListCreateAPIView):
         # es el encargado de validar si la data es correcta y cumple con todos los requisitos
         valida = serializador.is_valid()
 
+        # SELECT * FROM platos WHERE nombre = '...' LIMIT 1;
+        platoExistente = PlatoModel.objects.filter(nombre = body.get('nombre')).first()
+
+        if platoExistente : 
+            return Response(data={
+                'message': 'El plato con nombre {} ya existe'.format(platoExistente.nombre)
+            })
+
         if valida == False:
             return Response(data={
                 'message': 'La informacion es invalida',
@@ -57,11 +65,21 @@ class PlatoApiView(ListCreateAPIView):
                 'content': serializador.errors
 
             })
+
+
+        # si la data pasada al serializador es una data valida entonces esta informacion se guardara en el atributo validated_data que es un diccionario, el validated_data solamente estara disponible cuando mandemos a la validacion, si no se hace la validacion el validated_data sera vacio
+        # platoExistente = PlatoModel.objects.filter(nombre = serializador.validated_data.get('nombre')).first()
+
+        # if platoExistente : 
+        #     return Response(data={
+        #         'message': 'El plato con nombre {} ya existe'.format(platoExistente.nombre)
+        #     })
         
+        print(serializador.validated_data)
         # asi guardamos la informacion en la base de datos utilizando el serializador
         nuevoPlato = serializador.save()
         print(nuevoPlato)
-        
+
         serializar = PlatoSerializer(instance=nuevoPlato)
         return Response(data={
             'message': 'Plato creado exitosamente',
@@ -70,5 +88,42 @@ class PlatoApiView(ListCreateAPIView):
         })
 
 
+class PlatoDestroyApiView(DestroyAPIView):
+    # queryset = PlatoModel.objects.all()
+    # serializer_class = PlatoSerializer
+
+    def delete(self, request: Request, pk: int):
+        print(pk)
+        platoEncontrado = PlatoModel.objects.filter(id = pk, disponibilidad = True).first()
+
+        if platoEncontrado is None:
+            return Response(data={
+                'message': 'El plato no existe'
+            })
+        
+        # Le cambiamos la disponibilidad
+        platoEncontrado.disponibilidad = False
+        
+        # guardamos los cambios en la bd
+        platoEncontrado.save()
+
+        return Response(data={
+            'message': 'Plato eliminado exitosamente'
+        })
+
+class ListarCategoriaApiView(ListAPIView):
+    def get(self, request:Request, pk : int):
+        categoriaEncontrada = CategoriaModel.objects.filter(id= pk).first()
+        print(categoriaEncontrada)
+
+        if categoriaEncontrada is None:
+            return Response(data={
+                'message': 'Categoria no existe'
+            })
+
+        serializador = CategoriaConPlatosSerializer(instance=categoriaEncontrada)
 
 
+        return Response(data={
+            'content': serializador.data
+        })
