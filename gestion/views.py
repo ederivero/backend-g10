@@ -1,6 +1,9 @@
 from rest_framework.generics import ListCreateAPIView
-from .models import CategoriaModel
-from .serializers import CategoriaSerializer
+from .models import CategoriaModel, PlatoModel
+from .serializers import CategoriaSerializer, PlatoSerializer
+from rest_framework.response import Response
+from rest_framework.request import Request
+
 # List > Listar (get)
 # Create > Crear (post)
 
@@ -18,3 +21,19 @@ class CategoriaApiView(ListCreateAPIView):
 
     # def post(self):
     #     pass
+
+class PlatoApiView(ListCreateAPIView):
+    queryset = PlatoModel.objects.all()
+    serializer_class = PlatoSerializer
+
+    def get(self, request: Request):
+        # al colocar ':' indicamos que el tipo de dato que sera esa variable en el caso que no la hemos seteado correctamente
+        # request > toda la informacion que viene del cliente
+        
+        # SELECT * FROM platos WHERE disponibilidad = true;
+        resultado = PlatoModel.objects.filter(disponibilidad=True).all()
+        print(resultado)
+        
+        return Response(data= {
+            'message': 'Me hizo get'
+        })

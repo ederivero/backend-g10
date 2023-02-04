@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CategoriaModel
+from .models import CategoriaModel, PlatoModel
 
 class CategoriaSerializer(serializers.ModelSerializer):
     # cuando utilizamos un serializador basandonos en un modelo se declara la clase Meta
@@ -13,3 +13,9 @@ class CategoriaSerializer(serializers.ModelSerializer):
         # exclude = ['id']
         
         # NOTA: no se puede trabajar con el exclude y el fields a la vez, o es uno o es el otro
+
+
+class PlatoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlatoModel
+        exclude = ['disponibilidad']
