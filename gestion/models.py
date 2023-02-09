@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .auth_manager import UsuarioManager
 
 class CategoriaModel(models.Model):
@@ -45,7 +45,8 @@ class PlatoModel(models.Model):
 
 
 # como vamos a modificar el comportamiento de la tabla auth_user de Django entonces tenemos que modificar su herencia
-class UsuarioModel(AbstractBaseUser):
+class UsuarioModel(AbstractBaseUser, PermissionsMixin):
+    # PermissionsMixin > sirve para poder relacionar la tabla auth_user con las demas tablas de permisos, tanto la de auth_permission como la de group_permissions
     # https://docs.djangoproject.com/en/4.1/topics/auth/customizing/
     # AbstractBaseUser > me permite modificar todo lo que yo quiera del modelo auth_user mientras que AbstracUser solamente me permite agregar nuevas columnas
     id = models.AutoField(primary_key=True, unique=True)

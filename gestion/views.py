@@ -1,6 +1,6 @@
-from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView
-from .models import CategoriaModel, PlatoModel
-from .serializers import CategoriaSerializer, CrearPlatoSerializer, CategoriaConPlatosSerializer, MostrarPlatoSerializer
+from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView, CreateAPIView
+from .models import CategoriaModel, PlatoModel, UsuarioModel
+from .serializers import CategoriaSerializer, CrearPlatoSerializer, CategoriaConPlatosSerializer, MostrarPlatoSerializer, RegistroUsuarioSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
 
@@ -138,3 +138,25 @@ class ListarCategoriaApiView(ListAPIView):
         return Response(data={
             'content': serializador.data
         })
+
+class RegistroUsuarioApiView(CreateAPIView):
+    def post(self, request: Request):
+        serializador = RegistroUsuarioSerializer(data = request.data)
+        validacion = serializador.is_valid()
+
+        if validacion is False:
+            return Response(data={
+                'message': 'error al crear el usuario',
+                'content': serializador.errors
+            }, status=400)
+        
+        # inicializo el nuevo usuario con la informacion validada
+        nuevoUsuario = UsuarioModel(**serializador.validated_data)
+        # ahora genero el hash de la contraseña
+        nuevoUsuario.set_password(serializador.validated_data.get('password'))
+        # guardo el usuario en la base de datos
+        nuevoUsuario.save()
+
+        return Response(data={
+            'message': 'Usuario creado exitosamente'
+        }, status=201)
