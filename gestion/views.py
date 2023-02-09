@@ -1,6 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView
 from .models import CategoriaModel, PlatoModel
-from .serializers import CategoriaSerializer, PlatoSerializer, CategoriaConPlatosSerializer
+from .serializers import CategoriaSerializer, CrearPlatoSerializer, CategoriaConPlatosSerializer, MostrarPlatoSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
 
@@ -24,7 +24,7 @@ class CategoriaApiView(ListCreateAPIView):
 
 class PlatoApiView(ListCreateAPIView):
     queryset = PlatoModel.objects.all()
-    serializer_class = PlatoSerializer
+    # serializer_class > cuando nosotros modificamos la funcionabilidad de los metodos ya no es necesario definir los atributos obligatorios (y queryset)
 
     def get(self, request: Request):
         # al colocar ':' indicamos que el tipo de dato que sera esa variable en el caso que no la hemos seteado correctamente
@@ -34,7 +34,7 @@ class PlatoApiView(ListCreateAPIView):
         resultado = PlatoModel.objects.filter(disponibilidad=True).all()
         print(resultado)
         # aca llamamos al serializer y le pasamos la informacion proveniente de la bd y con el parametro many True indicamos que le estamos pasando un arreglo de instancias
-        serializador = PlatoSerializer(instance=resultado, many=True)
+        serializador = MostrarPlatoSerializer(instance=resultado, many=True)
         print(serializador.data)
 
         return Response(data= {
@@ -45,7 +45,7 @@ class PlatoApiView(ListCreateAPIView):
     def post(self, request:Request):
         body = request.data
         # cuando queremos verificar si la informacion entrante es valida entonces utilizamos el parametro data en vez del parametro instance
-        serializador = PlatoSerializer(data=body)
+        serializador = CrearPlatoSerializer(data=body)
 
         # es el encargado de validar si la data es correcta y cumple con todos los requisitos
         valida = serializador.is_valid()
@@ -80,7 +80,7 @@ class PlatoApiView(ListCreateAPIView):
         nuevoPlato = serializador.save()
         print(nuevoPlato)
 
-        serializar = PlatoSerializer(instance=nuevoPlato)
+        serializar = MostrarPlatoSerializer(instance=nuevoPlato)
         return Response(data={
             'message': 'Plato creado exitosamente',
             # data > es la informacion convertida a un diccionario para que pueda ser entendida por el cliente
@@ -113,6 +113,7 @@ class PlatoDestroyApiView(DestroyAPIView):
 
 class ListarCategoriaApiView(ListAPIView):
     def get(self, request:Request, pk : int):
+        # SELECT * FROM CATEGORIAS WHERE ID = ... LIMIT 1;
         categoriaEncontrada = CategoriaModel.objects.filter(id= pk).first()
         print(categoriaEncontrada)
 
@@ -120,6 +121,16 @@ class ListarCategoriaApiView(ListAPIView):
             return Response(data={
                 'message': 'Categoria no existe'
             })
+        # dir(instancia) > nos muestra todos los atributos y metodos de la clase
+        # print(dir(categoriaEncontrada))
+        
+        # SELECT * FROM platos WHERE categoria_id = ... AND id = 10;
+        print(categoriaEncontrada.platos.filter(id=10).all())
+        plato = categoriaEncontrada.platos.all()[0] # estamos accediendo al primer plato de esta categoria
+        print(plato.nombre)
+        print(plato.id)
+        print(plato.precio)
+        print(plato.fechaCreacion)
 
         serializador = CategoriaConPlatosSerializer(instance=categoriaEncontrada)
 

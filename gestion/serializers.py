@@ -15,7 +15,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
         # NOTA: no se puede trabajar con el exclude y el fields a la vez, o es uno o es el otro
 
 
-class PlatoSerializer(serializers.ModelSerializer):
+class MostrarPlatoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlatoModel
         exclude = ['disponibilidad']
@@ -23,7 +23,15 @@ class PlatoSerializer(serializers.ModelSerializer):
         # sirve para decir que desde el plato nos podamos mover un nivel hacia arriba y devolver lo que vendria a ser la categoria
         depth = 1
 
+
+class CrearPlatoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlatoModel
+        exclude = ['disponibilidad']
+
 class CategoriaConPlatosSerializer(serializers.ModelSerializer):
+    # source > sirve para indicar que atributo del modelo tengo que utilizar para hacer que funcione, sin embargo si utilizamos el atributo original no es necesario colocar el source (porque dara un error de redundancia)
+    info_adicional = CrearPlatoSerializer(many=True, source='platos')
     class Meta:
         model = CategoriaModel
         fields = '__all__'
