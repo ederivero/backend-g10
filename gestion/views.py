@@ -3,11 +3,14 @@ from .models import CategoriaModel, PlatoModel, UsuarioModel
 from .serializers import CategoriaSerializer, CrearPlatoSerializer, CategoriaConPlatosSerializer, MostrarPlatoSerializer, RegistroUsuarioSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
-
+from rest_framework.permissions import IsAuthenticated
+from .permissions import SoloAdministradores, SoloMozos, SoloTrabajador
 # List > Listar (get)
 # Create > Crear (post)
 
 class CategoriaApiView(ListCreateAPIView):
+    # secuencia de permisos > el primer permiso se debe de cumplir para continuar con el segundo permiso y asi sucesivamente, si alguno falla (retorna False) entonces todo termina
+    permission_classes = [IsAuthenticated, SoloAdministradores]
     # al utilizar una vista generica que ya no es necesario definir el comportamiento para cuando sea get o post
     # queryset > el comando que utilizara para llamar a la informacion de nuestra base de datos
     # SELECT * FROM categoria;
@@ -91,7 +94,7 @@ class PlatoApiView(ListCreateAPIView):
 class PlatoDestroyApiView(DestroyAPIView):
     # queryset = PlatoModel.objects.all()
     # serializer_class = PlatoSerializer
-
+    permission_classes = [IsAuthenticated, SoloTrabajador]
     def delete(self, request: Request, pk: int):
         print(pk)
         platoEncontrado = PlatoModel.objects.filter(id = pk, disponibilidad = True).first()
