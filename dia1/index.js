@@ -1,14 +1,19 @@
 // asi se importa utilizando ECMAscript
 import express from 'express'
-import prisma from '@prisma/client'
-import { crearCategoria, listarCategorias, buscarCategoriaPorId } from './controllers/categorias.controller.js'
+
+import {
+  crearCategoria,
+  listarCategorias,
+  buscarCategoriaPorId,
+  actualizarCategoria,
+  eliminarCategoria,
+} from './controllers/categorias.controller.js'
+import { productoRouter } from './routes/productos.routes.js'
 
 // asi se importa utilizanco commonJs
 // const express = require('express')
 // const { PrismaClient } = require('@prisma/client')
 // const { crearCategoria } = require('./controllers/categorias.controller')
-
-const conexion = new prisma.PrismaClient()
 
 // se va a copiar toda la funcionabilidad de la libreria express en la variable servidor
 const servidor = express()
@@ -27,8 +32,11 @@ servidor.get('/', (req, res) => {
   })
 })
 
+// conjunto de rutas
+servidor.use(productoRouter)
+
 servidor.route('/categorias').post(crearCategoria).get(listarCategorias)
-servidor.route('/categoria/:id').get(buscarCategoriaPorId)
+servidor.route('/categoria/:id').get(buscarCategoriaPorId).put(actualizarCategoria).delete(eliminarCategoria)
 
 servidor.post('/productos', (req, res) => {
   console.log(req.body)

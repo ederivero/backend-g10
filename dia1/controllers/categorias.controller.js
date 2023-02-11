@@ -31,15 +31,65 @@ export const listarCategorias = async (req, res) => {
 export const buscarCategoriaPorId = async (req, res) => {
   console.log(req.params)
   const { id } = req.params
-  const resultado = await conexion.categoria.findFirst({ where: { id: +id } })
+  // include > sirve para indicar si queremos algun modelo vecino
+  const resultado = await conexion.categoria.findFirst({ where: { id: +id }, include: { productos: true } })
   if (!resultado) {
-    res.json({
+    return res.json({
       message: 'Categoria no existe',
     })
   }
+  // no se puede enviar dos o mas respuestas al cliente porque la conexion ya termino
+  else {
+    return res.json({
+      content: resultado,
+    })
+  }
+}
 
-  res.json({
+export const actualizarCategoria = async (req, res) => {
+  const { id } = req.params
+  const { body } = req
+  // Buscar primero si la categoria existe, si no existe retornar un message diciendo que no existe
+  const categoria = await conexion.categoria.findFirst({
+    where: {
+      id: +id,
+    },
+  })
+
+  if (!categoria) {
+    return res.json({
+      message: 'La categoria no existe',
+    })
+  }
+
+  const resultado = await conexion.categoria.update({
+    data: {
+      nombre: body.nombre,
+    },
+    where: {
+      id: +id,
+    },
+  })
+
+  return res.json({
     content: resultado,
+  })
+}
+
+export const eliminarCategoria = async (req, res) => {
+  const { id } = req.params
+  const categoriaEncontrada = await conexion.categoria.findFirst({ where: { id: +id } })
+
+  if (!categoriaEncontrada) {
+    return res.json({
+      message: 'La categoria no existe',
+    })
+  }
+
+  await conexion.categoria.delete({ where: { id: +id } })
+
+  return res.json({
+    message: 'Categoria eliminada exitosamente',
   })
 }
 // asi se exporta en commonJs

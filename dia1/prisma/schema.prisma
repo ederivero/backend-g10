@@ -21,12 +21,13 @@ model Categoria {
 }
 
 model Producto {
-  id       Int     @id @default(autoincrement())
-  nombre   String
+  id         Int     @id @default(autoincrement())
+  nombre     String
   // ? > sirve para indicar que la columna puede o no puede tener valor (nulleable)
-  precio   Float?
-  tieneIgv Boolean @map("tiene_igv")
-  sku      String  @unique
+  precio     Float?
+  tieneIgv   Boolean @map("tiene_igv")
+  sku        String  @unique
+  habilitado Boolean @default(true)
 
   categoriaId Int @map("categoria_id")
 
