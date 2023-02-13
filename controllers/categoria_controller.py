@@ -7,11 +7,13 @@ from marshmallow.exceptions import ValidationError
 
 # https://docs.sqlalchemy.org/en/14/orm/query.html
 # ahora en esta clase podre utilizar los metodos HTTP (GET, POST, PUT, DELETE) como si fuesen metodos de la clase
+
+
 class CategoriasController(Resource):
     def get(self):
         # SELECT * FROM categorias;
         data = conexion.session.query(Categoria).all()
-        print(data[0].nombre)
+        # print(data[0].nombre)
         # many =True > indicando que le vamos a pasar una lista de instancia y el DTO la tendra que iterar para poder convertir cada una de ellas
         serializador = CategoriaDto(many=True)
         # dump > convierte la instancia de la clase a un diccionario
@@ -30,8 +32,8 @@ class CategoriasController(Resource):
             resultado = serializador.load(data)
             print(resultado)
             # Inicializamos nuestra nueva categoria PERO aun no la guardamos
-            nuevaCategoria = Categoria(nombre = resultado.get('nombre'))
-            # agregamos este nuevo elemento en la base de datos 
+            nuevaCategoria = Categoria(nombre=resultado.get('nombre'))
+            # agregamos este nuevo elemento en la base de datos
             conexion.session.add(nuevaCategoria)
             # indicamos que se guarde de manera permanente
             conexion.session.commit()
@@ -48,7 +50,7 @@ class CategoriasController(Resource):
 
         except ValidationError as error_validacion:
             # Aca se ingresara cuando nos de un error de la validacion del DTO
-            return{
+            return {
                 'message': 'Error al crear la categoria, vea el content',
                 'content': error_validacion.args
             }
@@ -58,7 +60,7 @@ class CategoriasController(Resource):
             print(type(error))
             return {
                 'message': 'Error al crear la categoria',
-                'content': error.args # aqui es donde almacenan todos los mensaje de error
+                'content': error.args  # aqui es donde almacenan todos los mensaje de error
             }
 
 
@@ -67,13 +69,13 @@ class CategoriaController(Resource):
         print(id)
         # SELECT * FROM categorias WHERE id = ... LIMIT 1;
         # first > no me devuelve una lista (arreglo) sino me devuelve solo una instancia o None si es que no hay
-        # all > me devolver una lista con todas las coincidencias 
-        categoria = conexion.session.query(Categoria).filter_by(id= id).first()
+        # all > me devolver una lista con todas las coincidencias
+        categoria = conexion.session.query(Categoria).filter_by(id=id).first()
         print(categoria)
         if categoria is None:
             return {
                 'message': 'La categoria no existe'
-            }
+            }, 400
         serializador = CategoriaDto()
         data = serializador.dump(categoria)
         return {

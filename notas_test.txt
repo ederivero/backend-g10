@@ -1,0 +1,7 @@
+-s > muestra el output (los print)
+VARIABLE=VALOR  pytest > asi se seteean las variables de entorno
+--v | verbosity > sirve para mejorar el output y que muestre mejor los test
+--disable-warnings > desactiva los warnings
+--no-header > quita los headers
+
+DATABASE_URL='sqlite://'  pytest -vv  --disable-warnings --no-header > comando

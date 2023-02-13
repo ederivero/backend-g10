@@ -15,8 +15,11 @@ from controllers.categoria_controller import CategoriasController, CategoriaCont
 # aca utilizaremos el archivo .env para agregarlo a las variables de entorno
 load_dotenv()
 
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']= environ.get('DATABASE_URL')
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 
 # inicializamos nuestra clase Api
 api = Api(app)
@@ -25,7 +28,8 @@ api = Api(app)
 conexion.init_app(app)
 
 # Inicializamos la clase Migrate pasandole nuestra aplicacion de Flask y nuestra conexion a SQLAlchemy
-Migrate(app,conexion)
+Migrate(app, conexion)
+
 
 # Asi utilizariamos la creacion de las tablas sin utilizar migraciones
 # este controlador se ejecutara antes del primer request de nuestro servidor
@@ -34,6 +38,7 @@ def inicializadora():
     # realizar la creacion de todos los modelos de nuestro proyecto como tablas en la base de datos
     # conexion.create_all()
     pass
+
 
 api.add_resource(CategoriasController, '/categorias')
 api.add_resource(CategoriaController, '/categoria/<int:id>')
