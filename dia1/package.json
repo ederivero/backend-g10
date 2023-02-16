@@ -1,0 +1,26 @@
+{
+  "name": "autenticacion",
+  "version": "1.0.0",
+  "description": "autenticacion con nodejs y jwt",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "express",
+    "nodejs",
+    "jwt"
+  ],
+  "author": "eduardo de rivero",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "nodemon": "^2.0.20"
+  }
+}
