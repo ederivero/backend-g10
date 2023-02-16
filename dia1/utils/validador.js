@@ -17,4 +17,18 @@ export const validarToken = (req, res, next) => {
         "Formato de token invalido, debe ser en el formato Bearer <tu_token>",
     });
   }
+
+  try {
+    // si la token es valida entonces me retorna el payload caso contrario me emitira un error
+    const payload = jwt.verify(token, "ultramegasupersecreto");
+    console.log(payload);
+
+    // si todo esta bien le indicaremos que pase al siguiente controlador
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Erro en la token",
+      content: error.message,
+    });
+  }
 };
