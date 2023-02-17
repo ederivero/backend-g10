@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 // Datatypes de mongoose > https://mongoosejs.com/docs/schematypes.html
 // Configuracion de las columnas > https://mongoosejs.com/docs/schematypes.html#schematype-options
@@ -29,16 +30,17 @@ const usuarioSchema = new mongoose.Schema(
       required: true,
       set: (valor) => {
         // servira para cuando queramos modificar o establer el valor de esta propiedad
+        const passwordHashed = bcrypt.hashSync(valor, 10);
         console.log(valor);
-        return "123";
+        return passwordHashed;
       },
     },
   },
   // Configuraciones de la coleccion
   {
     timestamps: {
-      createdAt: true,
-      updatedAt: "actualizado",
+      createdAt: true, // se registre un nuevo usuario tomara la hora de la base de datos
+      updatedAt: "actualizado", // se actualice alguna informacion de un usuario cambiara su hora y fecha a la hora actual de la base de datos
     },
   }
 );

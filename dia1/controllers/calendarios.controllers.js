@@ -26,6 +26,7 @@ const calendarios = [
 ];
 
 export const devolverCalendarios = async (req, res) => {
+  console.log(req.user);
   return res.json({
     message: "Llegaste al final!",
   });

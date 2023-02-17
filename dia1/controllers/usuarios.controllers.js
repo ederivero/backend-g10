@@ -1,33 +1,43 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { UsuarioModel } from "../models/usuario.model.js";
 
 const usuarios = [];
 
 export const registroUsuario = async (req, res) => {
   // {'nombre': 'eduardo', 'apellido': 'de rivero', 'correo': 'ederiveroman@gmail.com', 'password':'Welcome123'}
   const data = req.body;
-  const passwordHashed = bcrypt.hashSync(data.password, 10);
-  console.log(passwordHashed);
+  try {
+    const nuevoUsuario = await UsuarioModel.create(data);
 
-  // TODO: reemplazar por base de datos
-  usuarios.push({ ...data, password: passwordHashed });
+    return res
+      .json({
+        message: "Usuario creado exitosamente",
+        content: nuevoUsuario.toJSON(),
+      })
+      .status(201);
+  } catch (error) {
+    if (error.name === "MongoServerError" && error.code === 11000) {
+      return res
+        .json({
+          message: "El usuario ya existe",
+        })
+        .status(400);
+    }
 
-  return res
-    .json({
-      message: "Usuario creado exitosamente",
-    })
-    .status(201);
+    return res
+      .json({
+        message: "Error al crear el usuario, intentelo nuevamente",
+      })
+      .status(400);
+  }
 };
 
 export const login = async (req, res) => {
   // { "correo": "ederiveroman@gmail.com", "password": "Welcome123"}
   const data = req.body;
 
-  // TODO : reemplazar por base de datos
-  // encontrar el usuario en el arreglo
-  const usuarioEncontrado = usuarios.find(
-    (usuario) => usuario.correo === data.correo
-  );
+  const usuarioEncontrado = await UsuarioModel.findOne({ correo: data.correo });
 
   if (!usuarioEncontrado) {
     return res.status(404).json({
