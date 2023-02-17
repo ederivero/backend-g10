@@ -1,0 +1,50 @@
+db          > muestra la base de datos en la que me encuentro
+show dbs    > listar todas las bases de datos que tenemos en el servidor
+use DB_NAME > crea una nueva base de datos y si ya existe, nos movemos hacia ella
+
+----- CODIGO DE BD -----
+use pruebas
+db.alumnos.insertOne( {nombre : 'Eduardo',apellido: "de Rivero"} )
+db.alumnos.insertMany( [{ nombre : 'Willy', apellido : 'Martinez' },{ nombre : 'Julio', apellido: 'Mayta', sexo: 'MASCULINO' },{ nombre : 'Britanny', apellido: 'Muñoz', estado_civil: 'DIVORCIADA' }] )
+
+db.productos.insertMany( [ { nombre:'detergente', precio: 4.50, disponible: true, fec_vencimiento: new Date('2023-12-14') }, { nombre: 'mayonesa', precio: 1.00, disponible: false, fec_vencimiento: new Date('2023-03-17') } ])
+db.productos.insertMany([ { nombre: 'platano', precio: 1.80, disponible: true, fec_vencimiento: new Date('2023-02-18') } , { nombre : 'Harina PAN', precio: 4.50, disponible: true, fec_vencimiento: new Date('2024-01-01') } ] )
+
+
+-- TODOS LOS PRODUCTOS que tengan un precio de 10.00 o 50.00
+db.productos.find({ $or: [ { precio :10.00 } , { precio: 50.00 } ] } )
+
+-- TODOS LOS PRODUCTOS que tengan precio menor o igual que 20.00 o su nombre sea platano 
+db.productos.find({ $or: [ { precio : { $lte: 20.00 } }, { nombre: 'platano' } ] })
+
+
+
+-- AGREGANDO LIMITES
+db.productos.find().limit(2)
+
+-- Cuando se hace el ordenamiento se trabaja en base al numero de caracter ascii osea primero ordera las MAYUS y luego las minusculas
+-- DESCENDENTE:
+ db.productos.find().sort( { nombre: -1 } )
+
+ -- ASCENDENTE:
+db.productos.find().sort( { nombre: 1 } )
+
+
+-- SELECCIONE DOS REGISTROS PERO SE SALTE LOS DOS PRIMEROS (los dos siguientes)
+db.productos.find().sort( { nombre: 1 } ).limit(2).skip(2)
+
+-- SELECCIONE DOS REGISTROS PERO SE SALTE LOS 4 PRIMEROS (los dos siguientes de los dos siguientes)
+db.productos.find().sort( { nombre: 1 } ).limit(2).skip(4)
+
+
+
+-- ACTUALIZACION
+-- UPDATE productos set: nombre='guayaba', disponible= false WHERE precio=1;
+db.productos.updateOne({ precio: 1 }, { $set: { nombre : 'guayaba', disponible: false } } )
+
+-- ELIMINACION
+-- DELETE FROM productos WHERE precio = 1;
+db.productos.deleteOne({ precio : 1 } )
+
+-- DELETE FROM productos;
+db.productos.deleteMany({ } )
