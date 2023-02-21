@@ -2,10 +2,13 @@ import express from "express";
 import { usuarioRouter } from "./router/usuarios.routes.js";
 import { calendariosRouter } from "./router/calendarios.routes.js";
 import mongoose from "mongoose";
+import { validarToken } from "./utils/validador.js";
 
 const server = express();
 
 server.use(express.json());
+
+server.all("/calendarios", validarToken);
 
 server.use(usuarioRouter);
 server.use(calendariosRouter);
