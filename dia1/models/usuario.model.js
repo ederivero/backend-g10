@@ -40,6 +40,11 @@ const usuarioSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       // type: [calendarioSchema] > si hubieramos realizado de esta manera estariamos indicando que dentro del modelo de usuario se almacenara toda la infromacion del calendario y todo se guardaria en el mismo modelo del usuario cosa que no es pertinente para este tipo de casos
     },
+
+    validado: {
+      type: mongoose.Schema.Types.Boolean,
+      defaul: false,
+    },
   },
   // Configuraciones de la coleccion
   {

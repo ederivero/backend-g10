@@ -42,3 +42,61 @@ export const crearCalendario = async (req, res) => {
     content: calendario_creado,
   });
 };
+
+export const actualizarCalendario = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  console.log(id);
+  try {
+    const calendario = await CalendarioModel.findOne({
+      _id: id,
+      usuario: req.user._id,
+    });
+
+    if (!calendario) {
+      return res.status(404).json({
+        message: "Calendario no existe",
+      });
+    }
+    // diferencia entre updateOne y findOneAndUpdate es que el segundo lo encontrara y lo devolvera mientras que el primero solamente actualizara y devolvera la informacion de la actualizacion
+    const calendario_actualizado = await CalendarioModel.findOneAndUpdate(
+      { _id: calendario._id },
+      data,
+      { new: true } // para indicar que queremos que nos devuelva el registro ya actualizado
+    );
+
+    return res.json({
+      message: "Calendario actualizado exitosamente",
+      content: calendario_actualizado,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error al actualizar el calendario",
+    });
+  }
+};
+
+export const eliminarCalendario = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const resultado = await CalendarioModel.deleteOne({
+      _id: id,
+      usuario: req.user._id,
+    });
+
+    if (resultado.deletedCount === 0) {
+      return res.json({
+        message: "Calendario no existe",
+      });
+    } else {
+      return res.json({
+        message: "Calendario eliminado exitosamente",
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error al eliminar el calendario",
+    });
+  }
+};

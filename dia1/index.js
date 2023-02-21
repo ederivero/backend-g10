@@ -9,17 +9,18 @@ const server = express();
 server.use(express.json());
 
 server.all("/calendarios", validarToken);
+server.all("/calendario/:id", validarToken);
 
 server.use(usuarioRouter);
 server.use(calendariosRouter);
 
-const puerto = 3000;
+const puerto = process.env.PORT ?? 3000;
 
 server.listen(puerto, () => {
   console.log(`Servidor corriendo exitosamente en el puerto ${puerto}`);
   mongoose.set("strictQuery", true);
   mongoose
-    .connect("mongodb://127.0.0.1:27017/agendas")
+    .connect(process.env.MONGO_URL)
     .then((valor) => {
       console.log("Se conecto a la base de datos exitosamente");
     })

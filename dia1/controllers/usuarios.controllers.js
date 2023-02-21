@@ -1,14 +1,18 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { UsuarioModel } from "../models/usuario.model.js";
-
-const usuarios = [];
+import { enviarCorreo } from "../utils/correo.js";
 
 export const registroUsuario = async (req, res) => {
   // {'nombre': 'eduardo', 'apellido': 'de rivero', 'correo': 'ederiveroman@gmail.com', 'password':'Welcome123'}
   const data = req.body;
   try {
     const nuevoUsuario = await UsuarioModel.create(data);
+
+    await enviarCorreo(
+      nuevoUsuario.correo,
+      "Hola por favor, haz click en el siguiente enlace para verificar tu cuenta"
+    );
 
     return res
       .json({
@@ -57,7 +61,7 @@ export const login = async (req, res) => {
       mensaje: "hola",
     };
     // aca creo la token
-    const token = jwt.sign(payload, "ultramegasupersecreto", {
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
 
