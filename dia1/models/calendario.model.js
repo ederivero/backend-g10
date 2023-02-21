@@ -27,6 +27,12 @@ const calendarioSchema = new mongoose.Schema({
   dias: {
     type: [diasSchema],
   },
+
+  // Indicando a que usuario le pertenece este calendario y cuando querramos devolver el calendario con el usuario sera mas practico hacer la busqueda
+  usuario: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 export const CalendarioModel = mongoose.model("calendarios", calendarioSchema);

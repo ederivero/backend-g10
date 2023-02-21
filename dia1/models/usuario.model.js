@@ -35,6 +35,11 @@ const usuarioSchema = new mongoose.Schema(
         return passwordHashed;
       },
     },
+    // Creando la referencia entre mis usuarios y mis calendarios en la cual solamente guardaremos el id de ese calendario y no toda la informacion
+    calendarios: {
+      type: [mongoose.Schema.Types.ObjectId],
+      // type: [calendarioSchema] > si hubieramos realizado de esta manera estariamos indicando que dentro del modelo de usuario se almacenara toda la infromacion del calendario y todo se guardaria en el mismo modelo del usuario cosa que no es pertinente para este tipo de casos
+    },
   },
   // Configuraciones de la coleccion
   {

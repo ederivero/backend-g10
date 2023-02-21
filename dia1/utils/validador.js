@@ -22,7 +22,7 @@ export const validarToken = async (req, res, next) => {
   try {
     // si la token es valida entonces me retorna el payload caso contrario me emitira un error
     const payload = jwt.verify(token, "ultramegasupersecreto");
-    console.log(payload);
+
     const usuario = await UsuarioModel.findOne({ correo: payload.correo });
     if (!usuario) {
       return res.json({
